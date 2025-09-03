@@ -1,0 +1,78 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vs/
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+# Visual Studio Code
+.vscode/
+# DotCover
+.idea/
+*.dotCover
+# NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+# Sonar
+.sonar/
+# Rider
+.idea/
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+# Mono Auto Generated Files
+test-results/
+# Windows image file caches
+Thumbs.db
+# Folder config file
+Desktop.ini
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+# VS Code directories
+.history/
+# Local history for Visual Studio
+.localhistory/
+# Database
+*.mdf
+*.ldf
+*.ndf
+# Logs
+*.log
+# npm
+client/node_modules/
+# SQLite
+*.db
+*.sqlite
+# Azure Functions local settings
+local.settings.json
+# JetBrains Rider
+.idea/
+# Backup & Report files
+*.bak
+*.Backup
+*.trn
+*.log
+*.dmp
+*.snk
+# Publish
+publish/
+# Test Results
+TestResults/
+# Build Results
+build/
+# Coverage
+coverage/
+# Python
+__pycache__/
+*.pyc
+# Mac
+.DS_Store
+# App settings
+appsettings.json
+appsettings.Development.json
