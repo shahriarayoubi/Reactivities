@@ -45,6 +45,7 @@ $RECYCLE.BIN/
 # Logs
 *.log
 # npm
+node_modules/
 client/node_modules/
 # SQLite
 *.db
