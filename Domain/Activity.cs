@@ -4,7 +4,7 @@ namespace Domain;
 
 public class Activity
 {
-    public string id { get; set; } = Guid.NewGuid().ToString();
+    public Guid id { get; set; } = Guid.NewGuid();
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required string Category { get; set; }

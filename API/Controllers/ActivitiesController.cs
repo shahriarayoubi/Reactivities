@@ -1,22 +1,23 @@
+using Application.Activities.Commands;
+using Application.Activities.Queries;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers;
 
-public class ActivitiesController(AppDbContext context) : BaseApiController
+public class ActivitiesController(IMediator mediator) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities()
     {
-        return await context.Activities.ToListAsync();
+        return await mediator.Send(new GetActivitiesQuery());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Activity>> GetActivity(string id)
+    public async Task<ActionResult<Activity>> GetActivity(Guid id)
     {
-        var activity = await context.Activities.FindAsync(id);
+        var activity = await mediator.Send(new GetActivityQuery { Id = id });
 
         if (activity == null)
         {
@@ -27,60 +28,39 @@ public class ActivitiesController(AppDbContext context) : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<Activity>> CreateActivity(Activity activity)
+    public async Task<IActionResult> CreateActivity(CreateActivityCommand command)
     {
-        context.Activities.Add(activity);
-        await context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetActivity), new { id = activity.id }, activity);
+        var createdActivity = await mediator.Send(command);
+        return CreatedAtAction(nameof(GetActivity), new { id = createdActivity.id }, createdActivity);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateActivity(string id, Activity activity)
+    public async Task<IActionResult> UpdateActivity(Guid id, UpdateActivityCommand command)
     {
-        if (id != activity.id)
-        {
-            return BadRequest();
-        }
-
-        context.Entry(activity).State = EntityState.Modified;
-
+        command.Id = id; // Set the ID from the route parameter
+        
         try
         {
-            await context.SaveChangesAsync();
+            var updatedActivity = await mediator.Send(command);
+            return Ok(updatedActivity);
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ActivityExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteActivity(string id)
-    {
-        var activity = await context.Activities.FindAsync(id);
-        if (activity == null)
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        context.Activities.Remove(activity);
-        await context.SaveChangesAsync();
-
-        return NoContent();
     }
 
-    private bool ActivityExists(string id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteActivity(Guid id)
     {
-        return context.Activities.Any(e => e.id == id);
+        try
+        {
+            await mediator.Send(new DeleteActivityCommand { Id = id });
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

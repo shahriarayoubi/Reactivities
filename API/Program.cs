@@ -1,3 +1,6 @@
+
+using Application.Activities.Queries;
+using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Add MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetActivitiesQuery).Assembly));
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
 // Add CORS
 builder.Services.AddCors(options =>
 {
@@ -14,14 +23,14 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyMethod()
               .AllowAnyHeader()
-              .WithOrigins("http://localhost:3000", "https://localhost:300"); // React dev server
+              .WithOrigins("http://localhost:3000", "https://localhost:3000"); // React dev server
     });
 });
 
 // Add Entity Framework
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("API"));
 });
 
