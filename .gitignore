@@ -77,3 +77,4 @@ __pycache__/
 # App settings
 appsettings.json
 appsettings.Development.json
+appsettings.Production.json
