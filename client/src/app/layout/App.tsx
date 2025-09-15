@@ -12,13 +12,14 @@ import { Activity } from  '../../lib/types/activity'
 import NavBar from './NavBar'
 import ActivityCard from '../../features/ActivityCard'
 import ActivityDetails from '../../features/ActivityDetails'
+import ActivityForm from '../../features/ActivityForm'
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
-  const [currentView, setCurrentView] = useState<'list' | 'details'>('list')
+  const [currentView, setCurrentView] = useState<'list' | 'details' | 'create'>('list')
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -46,10 +47,23 @@ function App() {
     setCurrentView('list')
   }
 
+  const handleCreateActivity = () => {
+    setCurrentView('create')
+  }
+
+  const handleActivityCreated = (newActivity: Activity) => {
+    setActivities(prev => [...prev, newActivity])
+    setCurrentView('list')
+  }
+
+  const handleCancelCreate = () => {
+    setCurrentView('list')
+  }
+
   if (loading) {
     return (
       <>
-        <NavBar onActivitiesClick={handleBackToList} />
+        <NavBar onActivitiesClick={handleBackToList} onCreateActivityClick={handleCreateActivity} />
         <Container maxWidth="lg" sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <CircularProgress />
@@ -63,7 +77,7 @@ function App() {
   if (error) {
     return (
       <>
-        <NavBar onActivitiesClick={handleBackToList} />
+        <NavBar onActivitiesClick={handleBackToList} onCreateActivityClick={handleCreateActivity} />
         <Container maxWidth="lg" sx={{ mt: 4 }}>
           <Alert severity="error">{error}</Alert>
         </Container>
@@ -73,7 +87,7 @@ function App() {
 
   return (
     <>
-      <NavBar onActivitiesClick={handleBackToList} />
+      <NavBar onActivitiesClick={handleBackToList} onCreateActivityClick={handleCreateActivity} />
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         {currentView === 'list' ? (
           <>
@@ -91,7 +105,7 @@ function App() {
               ))}
             </Grid2>
           </>
-        ) : (
+        ) : currentView === 'details' ? (
           selectedActivity && (
             <>
               <Typography variant="h3" component="h1" gutterBottom align="center">
@@ -102,6 +116,16 @@ function App() {
               </Box>
             </>
           )
+        ) : (
+          <>
+            <Typography variant="h3" component="h1" gutterBottom align="center">
+              Create New Activity
+            </Typography>
+            <ActivityForm 
+              onSuccess={handleActivityCreated}
+              onCancel={handleCancelCreate}
+            />
+          </>
         )}
       </Container>
     </>

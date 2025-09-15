@@ -12,9 +12,10 @@ import { EventNote as ActivityIcon } from '@mui/icons-material'
 
 interface NavBarProps {
   onActivitiesClick: () => void
+  onCreateActivityClick: () => void
 }
 
-const NavBar = ({ onActivitiesClick }: NavBarProps) => {
+const NavBar = ({ onActivitiesClick, onCreateActivityClick }: NavBarProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -104,18 +105,18 @@ const NavBar = ({ onActivitiesClick }: NavBarProps) => {
           {/* Create Activity Button */}
           <Button 
             variant="contained" 
+            onClick={onCreateActivityClick}
             sx={{ 
               textTransform: 'none',
               fontSize: '1rem',
               fontWeight: 600,
-              backgroundColor: 'rgba(255,255,255,0.15)',
+              backgroundColor: '#4caf50',
               color: 'white',
-              border: '2px solid rgba(255,255,255,0.3)',
+              border: 'none',
               borderRadius: 2,
               px: 3,
               '&:hover': {
-                backgroundColor: 'rgba(255,255,255,0.25)',
-                border: '2px solid rgba(255,255,255,0.5)',
+                backgroundColor: '#45a049',
               }
             }}
           >
