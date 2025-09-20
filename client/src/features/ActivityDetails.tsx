@@ -4,15 +4,25 @@ import {
   Typography, 
   Chip, 
   Box,
-  Divider
+  Divider,
+  Button,
+  CardActions
 } from '@mui/material'
+import { Delete as DeleteIcon } from '@mui/icons-material'
 import { Activity } from '../lib/types/activity'
 
 interface ActivityDetailsProps {
   activity: Activity
+  onDelete?: (activityId: string) => void
 }
 
-const ActivityDetails = ({ activity }: ActivityDetailsProps) => {
+const ActivityDetails = ({ activity, onDelete }: ActivityDetailsProps) => {
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this activity?')) {
+      onDelete?.(activity.id)
+    }
+  }
+
   return (
     <Card 
       sx={{ 
@@ -69,6 +79,20 @@ const ActivityDetails = ({ activity }: ActivityDetailsProps) => {
           </Typography>
         </Box>
       </CardContent>
+      
+      {onDelete && (
+        <CardActions sx={{ justifyContent: 'flex-end', pt: 0 }}>
+          <Button 
+            variant="contained" 
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDelete}
+            sx={{ mr: 1, mb: 1 }}
+          >
+            Delete Activity
+          </Button>
+        </CardActions>
+      )}
     </Card>
   )
 }

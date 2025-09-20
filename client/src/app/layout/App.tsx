@@ -60,6 +60,20 @@ function App() {
     setCurrentView('list')
   }
 
+  const handleDeleteActivity = async (activityId: string) => {
+    try {
+      await axios.delete(`https://localhost:5000/api/activities/${activityId}`)
+      // Remove the activity from the state
+      setActivities(prev => prev.filter(activity => activity.id !== activityId))
+      // Go back to the list view
+      setCurrentView('list')
+      setSelectedActivity(null)
+    } catch (err) {
+      console.error('Error deleting activity:', err)
+      alert('Failed to delete activity. Please try again.')
+    }
+  }
+
   if (loading) {
     return (
       <>
@@ -112,7 +126,10 @@ function App() {
                 Activity Details
               </Typography>
               <Box sx={{ maxWidth: 800, mx: 'auto' }}>
-                <ActivityDetails activity={selectedActivity} />
+                <ActivityDetails 
+                  activity={selectedActivity} 
+                  onDelete={handleDeleteActivity}
+                />
               </Box>
             </>
           )
